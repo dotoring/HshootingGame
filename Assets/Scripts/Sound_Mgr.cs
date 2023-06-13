@@ -78,6 +78,20 @@ public class Sound_Mgr : G_Singleton<Sound_Mgr>
             a_AudioNode.m_AudioSrc = a_AudioSrc;
             m_AdNodeList.Add(a_AudioNode);
         }
+
+        //사운드 OnOff, 사운드 볼륨 로컬 로딩 후 적용
+        int a_SoundOnfOff = PlayerPrefs.GetInt("SoundOnOff", 1);
+        if(a_SoundOnfOff == 1)
+        {
+            SoundOnOff(true);
+        }
+        else
+        {
+            SoundOnOff(false);
+        }
+
+        float a_Value = PlayerPrefs.GetFloat("SoundVolume", 1.0f);
+        SoundVolume(a_Value);
     }
 
     public void PlayBGM(string a_FileName, float fVolume = 0.2f)
@@ -233,5 +247,25 @@ public class Sound_Mgr : G_Singleton<Sound_Mgr>
         }
 
         m_SoundOnOff = a_OnOff;
+    }
+
+    public void SoundVolume(float fVolume)
+    {
+        if(m_AudioSrc != null)
+        {
+            m_AudioSrc.volume = m_BgmVolume * fVolume;
+        }
+
+        foreach(AudioNode a_AudNode in m_AdNodeList)
+        {
+            if(a_AudNode == null)
+            {
+                continue;
+            }
+
+            a_AudNode.m_AudioSrc.volume = a_AudNode.m_EffVolume * fVolume;
+        }
+
+        m_SoundVolume = fVolume;
     }
 }

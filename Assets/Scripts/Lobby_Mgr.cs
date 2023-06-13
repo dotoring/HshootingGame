@@ -14,6 +14,13 @@ public class Lobby_Mgr : MonoBehaviour
 
     public Text m_GoldText;
     public Text m_MyInfoText;
+
+    //환경설정 관련 변수
+    [Header("-----Config Box-----")]
+    public Button m_CfgBtn = null;
+    public GameObject Canvas_Dialog = null;
+    GameObject m_ConfigBoxObj = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -88,6 +95,23 @@ public class Lobby_Mgr : MonoBehaviour
             m_ClearSvDataBtn.onClick.AddListener(ClearSvData);
         }
 
+        //환경설정 dlg 관련 구현
+        if(m_CfgBtn != null)
+        {
+            m_CfgBtn.onClick.AddListener(() =>
+            {
+                if(m_ConfigBoxObj == null)
+                {
+                    m_ConfigBoxObj = Resources.Load("ConfigBox") as GameObject;
+                }
+                GameObject a_CfgBoxObj = Instantiate(m_ConfigBoxObj) as GameObject;
+                a_CfgBoxObj.transform.SetParent(Canvas_Dialog.transform, false);
+                a_CfgBoxObj.GetComponent<ConfigBox>().DltMethod = CfgResponse;
+
+                Time.timeScale = 0.0f;
+            });
+        }
+
         Sound_Mgr.Instance.PlayBGM("sound_bgm_title_001", 1.0f);
     }
 
@@ -112,5 +136,14 @@ public class Lobby_Mgr : MonoBehaviour
         }
 
         Sound_Mgr.Instance.PlayGUISound("Pop", 1.0f);
+    }
+
+    void CfgResponse()
+    {
+        if(m_MyInfoText != null)
+        {
+            m_MyInfoText.text = "내정보 : 별명(" + GlobalValue.g_NickName + ") : 순위(" +
+                "1등" + ") : 점수(" + GlobalValue.g_BestScore + ")";
+        }
     }
 }

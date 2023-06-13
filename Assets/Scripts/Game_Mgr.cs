@@ -129,7 +129,7 @@ public class Game_Mgr : MonoBehaviour
         {
             m_CfgBtn.onClick.AddListener(() =>
             {
-                if(m_ConfigBoxObj = null)
+                if (m_ConfigBoxObj == null)
                 {
                     m_ConfigBoxObj = Resources.Load("ConfigBox") as GameObject;
                 }

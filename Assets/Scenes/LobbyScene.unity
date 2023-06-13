@@ -560,6 +560,8 @@ MonoBehaviour:
   m_ExitBtn: {fileID: 597920032}
   m_GoldText: {fileID: 961537548}
   m_MyInfoText: {fileID: 738740640}
+  m_CfgBtn: {fileID: 125781733}
+  Canvas_Dialog: {fileID: 1846920042}
 --- !u!4 &484100338
 Transform:
   m_ObjectHideFlags: 0
