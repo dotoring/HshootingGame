@@ -73,13 +73,13 @@ public class Monster_Ctrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_MonType == MonType.MT_Zombi)
+        if (m_MonType == MonType.MT_Zombi)  //몬스터가 좀비일때
             Zombi_AI_Update();
-        else if (m_MonType == MonType.MT_Missile)
+        else if (m_MonType == MonType.MT_Missile)   //몬스터가 미사일일때
         {
             MissileAIUpdate();
         }
-        else if (m_MonType == MonType.MT_Boss)
+        else if (m_MonType == MonType.MT_Boss)  //몬스터가 보스일때
         {
             BossAIUpdate();
         }
@@ -91,8 +91,8 @@ public class Monster_Ctrl : MonoBehaviour
     void Zombi_AI_Update()
     {
         m_CurPos = transform.position;
-        m_CurPos.x += (-1.0f * Time.deltaTime * m_Speed);
-        m_CacPosY += Time.deltaTime * (m_Speed / m_CycleY);
+        m_CurPos.x += (-1.0f * Time.deltaTime * m_Speed);   //전방으로 이동하도록
+        m_CacPosY += Time.deltaTime * (m_Speed / m_CycleY); //위아래로 진자운동 하도록
         m_CurPos.y = m_SpawnPos.y + Mathf.Sin(m_CacPosY) * m_RandY;
         transform.position = m_CurPos;
 
@@ -103,9 +103,10 @@ public class Monster_Ctrl : MonoBehaviour
         }
 
         //--- 총알 발사 
-        if (m_BulletObj == null)
+        if (m_BulletObj == null)    //총알이 없으면 return
             return;
 
+        //일정 시간마다 좀비 몬스터의 총알 발사
         shoot_Time += Time.deltaTime;
         if(shoot_Delay <= shoot_Time)
         {
@@ -115,7 +116,6 @@ public class Monster_Ctrl : MonoBehaviour
                                             Vector3.left, BulletMySpeed);
             shoot_Time = 0.0f;
         }
-        //--- 총알 발사 
     }
 
     void MissileAIUpdate()
@@ -127,6 +127,7 @@ public class Monster_Ctrl : MonoBehaviour
 
         if(m_RefHero != null)
         {
+            //미사일이 주인공을 향해 유도되도록
             Vector3 a_calcVal = m_RefHero.transform.position - transform.position;
             m_DirVec = a_calcVal;
 
@@ -140,7 +141,7 @@ public class Monster_Ctrl : MonoBehaviour
 
         m_DirVec.Normalize();
         m_DirVec.x = -1.0f; //무조건 왼쪽 방향으로 이동하게 하기 위해서
-        m_DirVec.z = 0.0f;  //
+        m_DirVec.z = 0.0f;
 
         m_CurPos += (m_DirVec * Time.deltaTime * m_Speed);
         transform.position = m_CurPos;
@@ -148,14 +149,14 @@ public class Monster_Ctrl : MonoBehaviour
 
     void BossAIUpdate()
     {
-        if(m_BossState == BossState.BS_Move)
+        if(m_BossState == BossState.BS_Move)    //보스 이동상태
         {
             m_CurPos = this.transform.position;
-            float a_ArrivePos = CameraResolution.m_ScreenWMax.x - 1.9f;
+            float a_ArrivePos = CameraResolution.m_ScreenWMax.x - 1.9f; //도착위치 설정
             if(a_ArrivePos < m_CurPos.x)
             {
                 m_CurPos.x += (-1.0f * Time.deltaTime * m_Speed);
-                if(m_CurPos.x <= a_ArrivePos)
+                if(m_CurPos.x <= a_ArrivePos)   //도착위치에 오면 특수공격 상태로 변경
                 {
                     shoot_Time = 1.28f;
                     m_BossState = BossState.BS_FeverAtt;
@@ -164,11 +165,13 @@ public class Monster_Ctrl : MonoBehaviour
 
             this.transform.position = m_CurPos;
         }
-        else if(m_BossState == BossState.BS_NormalAtt)
+        else if(m_BossState == BossState.BS_NormalAtt)  //보스 기본공격 상태
         {
             shoot_Time -= Time.deltaTime;
             if (shoot_Time <= 0.0f)
             {
+                //기본 공격 총알이 주인공을 향해 날아오게 설정
+                //향하는 방향을 향해 이미지가 회전되도록 설정
                 Vector3 a_TargetV = m_RefHero.transform.position - this.transform.position;
                 a_TargetV.Normalize();
                 GameObject a_NewObj = (GameObject)Instantiate(m_BulletObj);
@@ -178,6 +181,7 @@ public class Monster_Ctrl : MonoBehaviour
                 a_CalcAngle += 180.0f;
                 a_NewObj.transform.eulerAngles = new Vector3(0.0f, 0.0f, a_CalcAngle);
 
+                //7번의 기본 공격 후 특수공격으로 전환
                 m_ShootCount++;
                 if(m_ShootCount < 7)
                 {
@@ -191,11 +195,12 @@ public class Monster_Ctrl : MonoBehaviour
                 }
             }
         }
-        else if (m_BossState == BossState.BS_FeverAtt)
+        else if (m_BossState == BossState.BS_FeverAtt)  //보스 특수공격 상태
         {
             shoot_Time -= Time.deltaTime;
             if (shoot_Time <= 0.0f)
             {
+                //전방위로 15도마다 총알을 발사하도록 설정
                 float Radius = 10.0f;
                 Vector3 a_TargetV = Vector3.zero;
                 GameObject a_NewObj = null;
@@ -216,6 +221,7 @@ public class Monster_Ctrl : MonoBehaviour
 
                 Sound_Mgr.Instance.PlayEffSound("explosion_large_01", 0.8f);
 
+                //3번의 특수공격 후 기본공격으로 전환
                 m_ShootCount++;
                 if(m_ShootCount < 3)
                 {
@@ -246,23 +252,19 @@ public class Monster_Ctrl : MonoBehaviour
         if (m_CurHP <= 0.0f)
             return;
 
+        //데미지 설정
         float a_CacDmg = a_Value;
         if (m_CurHP < a_Value)
             a_CacDmg = m_CurHP;
 
-        //Game_Mgr a_Game_Mgr = null;
-        //GameObject a_GObj = GameObject.Find("Game_Mgr");
-        //if (a_GObj != null)
-        //    a_Game_Mgr = a_GObj.GetComponent<Game_Mgr>();
-        //if (a_Game_Mgr != null)
-        //    a_Game_Mgr.DamageText(-a_CacDmg, transform.position, Color.red);
-
         Game_Mgr.Inst.DamageText(-a_CacDmg, transform.position, Color.red);
 
+        //데미지 만큼 몬스터 체력 차감
         m_CurHP -= a_Value;
         if (m_CurHP < 0.0f)
             m_CurHP = 0.0f;
 
+        //몬스터 체력 게이지 변경
         if (m_HpBar != null)
             m_HpBar.fillAmount = m_CurHP / m_MaxHP;
 

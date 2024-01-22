@@ -196,7 +196,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\uC9F1\uC9F1\uC9F1 \uD6A1\uC288\uD305"
+  m_Text: "\uB0A0\uC544\uB77C \uD3AD\uADC4"
 --- !u!222 &72508816
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -523,7 +523,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987313134}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: f4508f95bc32f3247887463454f74eb8, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 32e804e94ae55b141856e4e4d0563cb7, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -536,14 +536,12 @@ VideoPlayer:
   m_DataSource: 0
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources:
-  - {fileID: 0}
-  m_DirectAudioVolumes:
-  - 0.3
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
   m_Url: 
-  m_EnabledAudioTracks: 01
-  m_DirectAudioMutes: 00
-  m_ControlledAudioTrackCount: 1
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
